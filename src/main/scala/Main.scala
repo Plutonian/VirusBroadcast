@@ -1,4 +1,5 @@
 import java.util.Random
+import java.util.concurrent.{Executors, TimeUnit}
 
 import javax.swing._
 
@@ -9,13 +10,23 @@ object Main {
     frame.add(p)
     frame.setSize(1000, 800)
     frame.setLocationRelativeTo(null)
-    frame.setVisible(true)
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
 
+    SwingUtilities.invokeLater { () =>
+      frame.setVisible(true)
+    }
 
-    val panelThread = new Thread(p)
-    panelThread.start()
-    val people = PersonPool.personList
+    val service1 = Executors.newSingleThreadScheduledExecutor()
+    service1.scheduleAtFixedRate(() => {
+      SwingUtilities.invokeLater { () =>
+        p.repaint()
+      }
+
+      MyPanel.worldTime += 1
+    }, 0, 100, TimeUnit.MILLISECONDS)
+
+
+    val people = AllPerson()
     var i = 0
     while ( {
       i < Constants.ORIGINAL_COUNT

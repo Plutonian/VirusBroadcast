@@ -1,5 +1,7 @@
 import java.util.Random
 
+import Constants.{BROAD_RATE, HOSPITAL_RECEIVE_TIME, SHADOW_TIME}
+import MyPanel.worldTime
 import Person.State.{CONFIRMED, FREEZE, NORMAL, SHADOW}
 
 /**
@@ -44,7 +46,7 @@ class Person(var city: City, var x: Int, var y: Int) {
 
   def beInfected() = {
     state = SHADOW
-    infectedTime = MyPanel.worldTime
+    infectedTime = worldTime
   }
 
   def distance(person: Person) = Math.sqrt(Math.pow(x - person.x, 2) + Math.pow(y - person.y, 2))
@@ -89,7 +91,7 @@ class Person(var city: City, var x: Int, var y: Int) {
   def update(): Unit = { //@TODO找时间改为状态机
     if (state >= FREEZE) return
 
-    if (state == CONFIRMED && MyPanel.worldTime - confirmedTime >= Constants.HOSPITAL_RECEIVE_TIME) {
+    if (state == CONFIRMED && worldTime - confirmedTime >= HOSPITAL_RECEIVE_TIME) {
       val bed = Hospital.pickBed
       if (bed == null) println("隔离区没有空床位")
       else {
@@ -100,17 +102,17 @@ class Person(var city: City, var x: Int, var y: Int) {
       }
     }
 
-    if (MyPanel.worldTime - infectedTime > Constants.SHADOW_TIME && state == SHADOW) {
+    if (worldTime - infectedTime > SHADOW_TIME && state == SHADOW) {
       state = CONFIRMED
-      confirmedTime = MyPanel.worldTime
+      confirmedTime = worldTime
     }
     action()
-    val people = PersonPool.personList
+    val people = AllPerson()
     if (state >= SHADOW) return
     for (person <- people) {
       if (person.state != NORMAL) {
         val random = new Random().nextFloat
-        if (random < Constants.BROAD_RATE && distance(person) < SAFE_DIST) this.beInfected()
+        if (random < BROAD_RATE && distance(person) < SAFE_DIST) this.beInfected()
       }
     }
   }

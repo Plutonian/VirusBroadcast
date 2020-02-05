@@ -12,7 +12,7 @@ object MyPanel {
   var worldTime = 0
 }
 
-class MyPanel() extends JPanel with Runnable {
+class MyPanel() extends JPanel {
   private var pIndex = 0
 
   this.setBackground(new Color(0x444444))
@@ -22,12 +22,10 @@ class MyPanel() extends JPanel with Runnable {
     //draw border
     g.setColor(new Color(0x00ff00))
     g.drawRect(Hospital.x, Hospital.y, Hospital.width, Hospital.height)
-    val people = PersonPool.personList
-    if (people == null) return
 
+    val people = AllPerson()
     people(pIndex).update()
 
-    //    import scala.collection.JavaConversions._
     for (person <- people) {
       person.state match {
         case Person.State.NORMAL =>
@@ -45,20 +43,4 @@ class MyPanel() extends JPanel with Runnable {
     if (pIndex >= people.size) pIndex = 0
   }
 
-  override def run() =
-    while ( {
-      true
-    }) {
-      SwingUtilities.invokeLater { () =>
-        this.repaint()
-      }
-
-      try {
-        Thread.sleep(100)
-        MyPanel.worldTime += 1
-      } catch {
-        case e: InterruptedException =>
-          e.printStackTrace()
-      }
-    }
 }
