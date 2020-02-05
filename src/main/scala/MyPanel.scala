@@ -1,5 +1,6 @@
 import java.awt._
 
+import Person.State.{CONFIRMED, FREEZE, NORMAL, SHADOW}
 import javax.swing._
 
 /**
@@ -28,12 +29,13 @@ class MyPanel() extends JPanel {
 
     for (person <- people) {
       person.state match {
-        case Person.State.NORMAL =>
+        case NORMAL =>
           g.setColor(new Color(0xdddddd))
-        case Person.State.SHADOW =>
+        case SHADOW =>
           g.setColor(new Color(0xffee00))
-        case Person.State.CONFIRMED =>
-        case Person.State.FREEZE =>
+        case CONFIRMED =>
+          g.setColor(new Color(0xff0000))
+        case FREEZE =>
           g.setColor(new Color(0xff0000))
       }
       person.update()

@@ -61,6 +61,7 @@ class Person(var city: City, var x: Int, var y: Int) {
   private def action(): Unit = {
     if (state == FREEZE) return
     if (!wantMove) return
+
     if (moveTarget == null || moveTarget.arrived) {
       val targetX = targetSig * new Random().nextGaussian + targetXU
       val targetY = targetSig * new Random().nextGaussian + targetYU
@@ -107,8 +108,9 @@ class Person(var city: City, var x: Int, var y: Int) {
       confirmedTime = worldTime
     }
     action()
-    val people = AllPerson()
     if (state >= SHADOW) return
+
+    val people = AllPerson()
     for (person <- people) {
       if (person.state != NORMAL) {
         val random = new Random().nextFloat
