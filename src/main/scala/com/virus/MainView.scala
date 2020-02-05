@@ -1,19 +1,18 @@
+package com.virus
+
 import java.awt._
 
-import Person.State.{CONFIRMED, FREEZE, NORMAL, SHADOW}
 import javax.swing._
+import model.Person.State.{CONFIRMED, FREEZE, NORMAL, SHADOW}
+import model.{AllPerson, Hospital}
 
 /**
- * @ClassName: MyPanel
+ * @ClassName: MainView
  * @Description: TODO
  * @author: Bruce Young
  * @date: 2020年02月02日 17:03
  */
-object MyPanel {
-  var worldTime = 0
-}
-
-class MyPanel() extends JPanel {
+class MainView() extends JPanel {
   private var pIndex = 0
 
   this.setBackground(new Color(0x444444))

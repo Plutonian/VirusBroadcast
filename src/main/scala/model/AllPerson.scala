@@ -1,3 +1,5 @@
+package model
+
 import java.util.Random
 
 import scala.collection.mutable

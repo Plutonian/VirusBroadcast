@@ -1,3 +1,5 @@
+package model
+
 /**
  * @ClassName: Bed
  * @Description: TODO

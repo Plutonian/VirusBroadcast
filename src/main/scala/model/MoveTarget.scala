@@ -1,3 +1,5 @@
+package model
+
 /**
  * @ClassName: MoveTarget
  * @Description: TODO

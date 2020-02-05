@@ -32,5 +32,5 @@ tasks.withType(ScalaCompile) {
 
 application {
     // Define the main class for the application.
-    mainClassName = 'Main'
+    mainClassName = 'com.virus.Starter'
 }

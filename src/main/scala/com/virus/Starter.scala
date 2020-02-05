@@ -1,11 +1,14 @@
+package com.virus
+
 import java.util.Random
 import java.util.concurrent.{Executors, TimeUnit}
 
 import javax.swing._
+import model.{AllPerson, World}
 
-object Main {
+object Starter {
   def main(args: Array[String]) = {
-    val p = new MyPanel
+    val p = new MainView
     val frame = new JFrame
     frame.add(p)
     frame.setSize(1000, 800)
@@ -22,7 +25,7 @@ object Main {
         p.repaint()
       }
 
-      MyPanel.worldTime += 1
+      World.worldTime += 1
     }, 0, 100, TimeUnit.MILLISECONDS)
 
 

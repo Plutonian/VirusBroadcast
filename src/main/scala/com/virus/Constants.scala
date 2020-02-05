@@ -1,3 +1,5 @@
+package com.virus
+
 /**
  * @ClassName: Constants
  * @Description: TODO

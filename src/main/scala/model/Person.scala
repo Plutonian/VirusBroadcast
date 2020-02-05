@@ -1,8 +1,10 @@
+package model
+
 import java.util.Random
 
-import Constants.{BROAD_RATE, HOSPITAL_RECEIVE_TIME, SHADOW_TIME}
-import MyPanel.worldTime
-import Person.State.{CONFIRMED, FREEZE, NORMAL, SHADOW}
+import com.virus.Constants
+import com.virus.Constants.{BROAD_RATE, HOSPITAL_RECEIVE_TIME, SHADOW_TIME}
+import model.Person.State.{CONFIRMED, FREEZE, NORMAL, SHADOW}
 
 /**
  * @ClassName: Person
@@ -46,7 +48,7 @@ class Person(var city: City, var x: Int, var y: Int) {
 
   def beInfected() = {
     state = SHADOW
-    infectedTime = worldTime
+    infectedTime = World.worldTime
   }
 
   def distance(person: Person) = Math.sqrt(Math.pow(x - person.x, 2) + Math.pow(y - person.y, 2))
@@ -67,6 +69,7 @@ class Person(var city: City, var x: Int, var y: Int) {
       val targetY = targetSig * new Random().nextGaussian + targetYU
       moveTarget = new MoveTarget(targetX.toInt, targetY.toInt)
     }
+
     val dX = moveTarget.x - x
     val dY = moveTarget.y - y
     val length = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2))
@@ -75,14 +78,19 @@ class Person(var city: City, var x: Int, var y: Int) {
       return
     }
     var udX = (dX / length).toInt
-    if (udX == 0 && dX != 0) if (dX > 0) udX = 1
-    else udX = -1
+    if (udX == 0 && dX != 0)
+      if (dX > 0) udX = 1
+      else udX = -1
+
     var udY = (dY / length).toInt
-    if (udY == 0 && udY != 0) if (dY > 0) udY = 1
-    else udY = -1
+    if (udY == 0 && dY != 0)
+      if (dY > 0) udY = 1
+      else udY = -1
+
     if (x > 700) {
       moveTarget = null
-      if (udX > 0) udX = -udX
+      if (udX > 0)
+        udX = -udX
     }
     moveTo(udX, udY)
     //        if(wantMove()){
@@ -92,20 +100,20 @@ class Person(var city: City, var x: Int, var y: Int) {
   def update(): Unit = { //@TODO找时间改为状态机
     if (state >= FREEZE) return
 
-    if (state == CONFIRMED && worldTime - confirmedTime >= HOSPITAL_RECEIVE_TIME) {
-      val bed = Hospital.pickBed
-      if (bed == null) println("隔离区没有空床位")
-      else {
-        state = FREEZE
-        x = bed.x
-        y = bed.y
-        bed.empty = false
+    if (state == CONFIRMED && World.worldTime - confirmedTime >= HOSPITAL_RECEIVE_TIME) {
+      Hospital.pickBed() match {
+        case Some(bed) =>
+          state = FREEZE
+          x = bed.x
+          y = bed.y
+          bed.empty = false
+        case None => println("隔离区没有空床位")
       }
     }
 
-    if (worldTime - infectedTime > SHADOW_TIME && state == SHADOW) {
+    if (World.worldTime - infectedTime > SHADOW_TIME && state == SHADOW) {
       state = CONFIRMED
-      confirmedTime = worldTime
+      confirmedTime = World.worldTime
     }
     action()
     if (state >= SHADOW) return
