@@ -31,34 +31,24 @@ class ViewController {
     val service = Executors.newSingleThreadScheduledExecutor()
 
     btnStart.setOnAction { _ =>
-      //      val g = worldCanvas.getGraphicsContext2D
-      //
-      //      //draw City
-      //      g.setFill(Color.valueOf("444444"))
-      //      g.fillRect(0, 0, worldCanvas.getWidth, worldCanvas.getHeight)
-      //
-      //      //draw Hospital
-      //      g.setFill(Color.BLACK)
-      //      g.fillRect(Hospital.x, Hospital.y, Hospital.width, Hospital.height)
       timer.start()
       service.scheduleAtFixedRate(() => {
 
-        //        println(s"Day:${World.now}")
         val people = City.people()
-        //        people(pIndex).update()
+        //                people(pIndex).update()
 
-        //        people.groupBy { p => p.state }.foreach {
-        //          case (k, v) =>
-        //            print(s"$k ==>${v.size}\t")
-        //        }
-        //        println()
+        people.groupBy { p => p.state }.foreach {
+          case (k, v) =>
+            print(s"$k ==>${v.size}\t")
+        }
+        println()
 
         for (person <- people) {
           person.update()
         }
 
         World.run()
-      }, 0, 100, TimeUnit.MILLISECONDS)
+      }, 0, 1000, TimeUnit.MILLISECONDS)
 
     }
     btnStop.setOnAction { _ =>

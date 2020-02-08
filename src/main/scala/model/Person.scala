@@ -47,7 +47,7 @@ class Person(var x: Int, var y: Int) {
   }
 
   private def action(): Unit = {
-    if (state == FREEZE) return
+    if (state eq FREEZE) return
     if (!wantMove) return
 
     if (moveTarget == null || moveTarget.arrived) {
@@ -66,14 +66,10 @@ class Person(var x: Int, var y: Int) {
       return
     }
 
-    //    val udX = {
-    //      val tx = (dX / length).toInt
-    //      if (tx == 0 && dX != 0)
-    //        if (dX > 0) 1 else -1
-    //      else tx
-    //    }
+    // if udx == 0 dx< length
+    // if udx != 0 that dy equals 0
+    var udX = (dX / length).toInt // 0 or 1,-1
 
-    var udX = (dX / length).toInt
     if (udX == 0 && dX != 0)
       if (dX > 0) udX = 1
       else udX = -1
@@ -89,10 +85,18 @@ class Person(var x: Int, var y: Int) {
         udX = -udX
     }
 
+    if (y > City.maxY) {
+      moveTarget = null
+
+      if (udY > 0)
+        udY = -udY
+    }
     moveTo(udX, udY)
   }
 
   def update(): Unit = { //@TODO找时间改为状态机
+
+    //already FREEZE or CURED
     if (state.value >= FREEZE.value) return
 
     if ((state eq CONFIRMED) && World.now - confirmedTime >= HOSPITAL_RECEIVE_TIME) {
@@ -107,17 +111,17 @@ class Person(var x: Int, var y: Int) {
       }
     }
 
-    if (World.now - infectedTime > SHADOW_TIME && (state eq SHADOW)) {
+    if ((state eq SHADOW) && World.now - infectedTime > SHADOW_TIME) {
       state = CONFIRMED
       confirmedTime = World.now
     }
 
     action()
+
     if (state.value >= SHADOW.value) return
 
-
-    City.people().to(LazyList).filter {
-      _.state != NORMAL
+    City.people().to(LazyList).filter { p =>
+      (p.state eq SUSPECTED) || (p.state eq SHADOW)
     }.foreach { person =>
       val random = new Random().nextFloat
 

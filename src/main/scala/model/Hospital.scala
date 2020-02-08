@@ -27,19 +27,30 @@ object Hospital {
       height = 0
     } else {
 
-      val column = Constants.BED_COUNT / 100
-      width = column * 6
+      //      val (baseX, baseY) = (Hospital.x, 100)
+      //      val xSpan = 6
+      //      val span = 10
+      //      var column = 0
+      for (_ <- 0 until Constants.BED_COUNT) {
 
-      for (i <- 0 until column) {
-        var j = 10
-        while ( {
-          j <= 610
-        }) {
-          val bed = new Bed(Hospital.x + i * 6, 100 + j)
-          beds.addOne(bed)
-          j += 6
-        }
+        val bed = new Bed(0, 0)
+        beds.addOne(bed)
+
       }
+
+      //      val column = Math.max(Constants.BED_COUNT / 100, 1)
+      //      width = column * 6
+      //
+      //      for (i <- 0 until column) {
+      //        var j = 10
+      //        while ( {
+      //          j <= 610
+      //        }) {
+      //          val bed = new Bed(Hospital.x + i * 6, 100 + j)
+      //          beds.addOne(bed)
+      //          j += 6
+      //        }
+      //      }
     }
   }
 
