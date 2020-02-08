@@ -48,7 +48,7 @@ class ViewController {
         }
 
         World.run()
-      }, 0, 1000, TimeUnit.MILLISECONDS)
+      }, 0, 200, TimeUnit.MILLISECONDS)
 
     }
     btnStop.setOnAction { _ =>
