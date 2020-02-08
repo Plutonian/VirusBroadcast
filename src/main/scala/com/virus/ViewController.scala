@@ -1,17 +1,20 @@
 package com.virus
 
+import java.util.concurrent.{Executors, TimeUnit}
+
 import javafx.animation.AnimationTimer
 import javafx.fxml.FXML
-import javafx.scene.canvas.{Canvas, GraphicsContext}
-import javafx.scene.control.Button
+import javafx.scene.canvas.Canvas
+import javafx.scene.control.{Button, Label}
 import javafx.scene.paint.Color
-import model.Person.State.{CONFIRMED, FREEZE, NORMAL, SHADOW}
-import model.{AllPerson, Hospital, World}
+import model.State.{CONFIRMED, FREEZE, NORMAL, SHADOW}
+import model.{City, Hospital, World}
 
 class ViewController {
   @FXML private var btnStart: Button = _
   @FXML private var btnStop: Button = _
   @FXML private var btnReset: Button = _
+  @FXML private var lbworldTime: Label = _
 
   @FXML private var worldCanvas: Canvas = _
 
@@ -21,40 +24,69 @@ class ViewController {
 
 
     timer = (_: Long) => {
-      println("draw")
-      paint(worldCanvas.getGraphicsContext2D)
-      World.worldTime += 1
+      lbworldTime.setText(s"${World.now}")
+      paint(worldCanvas)
     }
 
+    val service = Executors.newSingleThreadScheduledExecutor()
+
     btnStart.setOnAction { _ =>
+      //      val g = worldCanvas.getGraphicsContext2D
+      //
+      //      //draw City
+      //      g.setFill(Color.valueOf("444444"))
+      //      g.fillRect(0, 0, worldCanvas.getWidth, worldCanvas.getHeight)
+      //
+      //      //draw Hospital
+      //      g.setFill(Color.BLACK)
+      //      g.fillRect(Hospital.x, Hospital.y, Hospital.width, Hospital.height)
       timer.start()
+      service.scheduleAtFixedRate(() => {
+
+        //        println(s"Day:${World.now}")
+        val people = City.people()
+        //        people(pIndex).update()
+
+        //        people.groupBy { p => p.state }.foreach {
+        //          case (k, v) =>
+        //            print(s"$k ==>${v.size}\t")
+        //        }
+        //        println()
+
+        for (person <- people) {
+          person.update()
+        }
+
+        World.run()
+      }, 0, 100, TimeUnit.MILLISECONDS)
+
     }
     btnStop.setOnAction { _ =>
       timer.stop()
+
     }
 
     btnReset.setOnAction { _ =>
       timer.stop()
-      World.worldTime = 0
+      World.resetTime()
     }
 
 
   }
 
-  private def paint(g: GraphicsContext): Unit = {
+  private def paint(canvas: Canvas): Unit = {
+    val g = canvas.getGraphicsContext2D
 
-    //draw bg
+    //draw City
     g.setFill(Color.valueOf("444444"))
-    g.fillRect(0, 0, 1200, 800)
+    g.fillRect(0, 0, canvas.getWidth, canvas.getHeight)
 
-    //draw border
-    //    g.setColor(new Color(0x00ff00))
-
-    g.setFill(Color.RED)
+    //draw Hospital
+    g.setFill(Color.BLACK)
     g.fillRect(Hospital.x, Hospital.y, Hospital.width, Hospital.height)
 
-    val people = AllPerson()
-    //    people(pIndex).update()
+    val people = City.people()
+    //        people(pIndex).update()
 
     for (person <- people) {
       person.state match {
@@ -67,10 +99,10 @@ class ViewController {
         case FREEZE =>
           g.setFill(Color.valueOf("ff0000"))
       }
-      person.update()
       g.fillOval(person.x, person.y, 3, 3)
     }
-    //    pIndex += 1
-    //    if (pIndex >= people.size) pIndex = 0
+
+    //        pIndex += 1
+    //        if (pIndex >= people.size) pIndex = 0
   }
 }

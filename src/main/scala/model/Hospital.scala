@@ -35,7 +35,7 @@ object Hospital {
         while ( {
           j <= 610
         }) {
-          val bed = new Bed(800 + i * 6, 100 + j)
+          val bed = new Bed(Hospital.x + i * 6, 100 + j)
           beds.addOne(bed)
           j += 6
         }
@@ -46,4 +46,14 @@ object Hospital {
   def pickBed() = {
     beds.find(bed => bed.empty)
   }
+}
+
+/**
+ * @ClassName: Bed
+ * @Description: TODO
+ * @author: Bruce Young
+ * @date: 2020年02月02日 21:00
+ */
+class Bed(val x: Int, val y: Int) {
+  var empty = true
 }

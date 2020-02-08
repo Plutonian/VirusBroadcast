@@ -6,11 +6,12 @@ import javafx.application.Application
 import javafx.scene.paint.Color
 import javafx.scene.{Parent, Scene}
 import javafx.stage.Stage
-import model.AllPerson
+import model.City
 
 object Starter {
   def main(args: Array[String]): Unit = {
     initWorld()
+    println("Init world OK")
 
     Application.launch(classOf[App])
   }
@@ -18,7 +19,7 @@ object Starter {
   private def initWorld() = {
     //create infected person
 
-    val people = AllPerson()
+    val people = City.people()
 
     (0 until Constants.ORIGINAL_COUNT).foreach { _ =>
       val index = new Random().nextInt(people.size - 1)
@@ -42,7 +43,7 @@ class App extends Application {
 
   override def start(primaryStage: Stage): Unit = {
     primaryStage.setTitle("Virus")
-    primaryStage.setWidth(700)
+    primaryStage.setWidth(1000)
     primaryStage.setHeight(800)
 
 
