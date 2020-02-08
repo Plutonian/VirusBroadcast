@@ -6,6 +6,7 @@
  */
 public class Constants {
 
+    static final int PEOPLE = 5000;
     public static int ORIGINAL_COUNT = 50;//初始感染数量
     public static float BROAD_RATE = 0.8f;//传播率
     public static float SHADOW_TIME = 140;//潜伏时间

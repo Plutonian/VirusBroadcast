@@ -37,20 +37,17 @@ public class MyPanel extends JPanel implements Runnable {
             switch (person.getState()) {
                 case Person.State.NORMAL: {
                     g.setColor(new Color(0xdddddd));
-
+                    break;
                 }
-                break;
                 case Person.State.SHADOW: {
                     g.setColor(new Color(0xffee00));
-
+                    break;
                 }
-                break;
                 case Person.State.CONFIRMED:
                 case Person.State.FREEZE: {
                     g.setColor(new Color(0xff0000));
-
+                    break;
                 }
-                break;
             }
             person.update();
             g.fillOval(person.getX(), person.getY(), 3, 3);
@@ -60,6 +57,7 @@ public class MyPanel extends JPanel implements Runnable {
         if (pIndex >= people.size()) {
             pIndex = 0;
         }
+
     }
 
     @Override
